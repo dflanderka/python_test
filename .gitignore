@@ -8,6 +8,8 @@
 .cache/*
 .pytest_cache/*
 .settings/*
+build/*
+*/Program Files/*
 
 # Python packaging
 dist/*
