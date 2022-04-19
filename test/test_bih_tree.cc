@@ -27,7 +27,7 @@
 #include <fstream>
 
 #include "bounding_box.hh"
-#include "bih_tree.hh"
+#include "bih.hh"
 
 
 void test_aabb() {
