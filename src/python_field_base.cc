@@ -24,9 +24,9 @@ PYBIND11_MODULE(py_field_base, m) {
 //    //py::module m( "bih", );
     m.doc() = "PythonFieldBase.";
     py::class_<PythonFieldBase>(m, "FieldPython")
-		.def(py::init<std::vector>());
         .def("set_dependency", &PythonFieldBase::set_dependency)
-        .def("set_time", (const double&(PythonFieldBase::*)()) &PythonFieldBase::set_time , py::return_value_policy::reference);
+        .def("get_time", &PythonFieldBase::get_time, py::return_value_policy::copy)
+        .def("cache_reinit", &PythonFieldBase::cache_reinit , py::return_value_policy::copy);
 
 //    py::class_<BIHTree>(m, "BIH")
 //        .def(py::init<unsigned int>(), py::arg("soft_leaf_size_limit")  = 20)
