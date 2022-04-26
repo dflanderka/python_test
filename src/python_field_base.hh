@@ -56,13 +56,20 @@ class PythonFieldBase
 {
 public:
     PythonFieldBase(std::vector<FieldCacheProxy> data)
-    : fields_data_(data) {}
+    {
+    	for (uint i=0; i<data.size(); ++i) {
+    	    std::vector<size_t> strides = { (data[i].shape()[1]*sizeof(double)) };
+    		py::array field_data(data[i].shape(), strides, data[i].field_cache_ptr() ); // numpy array
+    		fields_dict_[data[i].field_name()] = field_data;
+        }
+    }
 
     py::list set_dependency() const
     {
-        std::vector<std::string> field_names(fields_data_.size());
-        for (uint i=0; i<fields_data_.size(); ++i) {
-            field_names[i] = fields_data_[i].field_name();
+        std::vector<std::string> field_names;
+        for (auto item : fields_dict_)
+        {
+        	field_names.push_back(item.first);
         }
         py::list field_list = py::cast(field_names);
         return field_list;
@@ -82,13 +89,7 @@ public:
     py::dict cache_reinit()
     {
         // Create dictionary self.fields[<field_name>] -> field numpy array of the cache
-        py::dict d;
-    	for (uint i=0; i<fields_data_.size(); ++i) {
-    	    std::vector<size_t> strides = { (fields_data_[i].shape()[1]*sizeof(double)) };
-    		py::array data(fields_data_[i].shape(), strides, fields_data_[i].field_cache_ptr() ); // numpy array
-            d[fields_data_[i].field_name()] = data;
-        }
-    	return d;
+    	return fields_dict_;
     }
 
     void cache_update()
@@ -97,7 +98,7 @@ public:
     }
 
 protected:
-    std::vector<FieldCacheProxy> fields_data_;
+    py::dict fields_dict_;
     double time_;
 };
 
