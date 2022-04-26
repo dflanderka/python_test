@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(cmake_example)
 
 include_directories(src)
+include_directories(C:/Program\ Files/Git/mnt/c/Users/davidflanderka/.local/lib/python3.8/site-packages/pybind11/include)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
