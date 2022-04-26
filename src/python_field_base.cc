@@ -25,7 +25,7 @@ PYBIND11_MODULE(py_field_base, m) {
     m.doc() = "PythonFieldBase.";
     py::class_<PythonFieldBase>(m, "FieldPython")
 		.def_property("time", &PythonFieldBase::get_time, &PythonFieldBase::set_time)
-        .def("set_dependency", &PythonFieldBase::set_dependency)
+        .def("get_dependency", &PythonFieldBase::get_dependency)
         .def("cache_reinit", &PythonFieldBase::cache_reinit , py::return_value_policy::copy);
 
 //    py::class_<BIHTree>(m, "BIH")

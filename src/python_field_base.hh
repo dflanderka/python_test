@@ -55,16 +55,22 @@ private:
 class PythonFieldBase
 {
 public:
-    PythonFieldBase(std::vector<FieldCacheProxy> data)
+    PythonFieldBase(std::vector<FieldCacheProxy> data, FieldCacheProxy result)
     {
+    	// Fill dictionary of input fields
     	for (uint i=0; i<data.size(); ++i) {
     	    std::vector<size_t> strides = { (data[i].shape()[1]*sizeof(double)) };
     		py::array field_data(data[i].shape(), strides, data[i].field_cache_ptr() ); // numpy array
     		fields_dict_[data[i].field_name()] = field_data;
         }
+    	// Fill array of result field
+    	{
+    		std::vector<size_t> strides = { (result.shape()[1]*sizeof(double)) };
+    		field_result_ = py::array(result.shape(), strides, result.field_cache_ptr() );
+    	}
     }
 
-    py::list set_dependency() const
+    py::list get_dependency() const
     {
         std::vector<std::string> field_names;
         for (auto item : fields_dict_)
@@ -80,7 +86,7 @@ public:
         this->time_ = t;
     }
 
-    double get_set_time() const
+    double get_time() const
     {
         return this->time_;
     	// set self.t in Python
@@ -99,6 +105,7 @@ public:
 
 protected:
     py::dict fields_dict_;
+    py::array field_result_;
     double time_;
 };
 
