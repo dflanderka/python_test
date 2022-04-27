@@ -24,8 +24,8 @@
 void test_base_class() {
     uint vec_size = 24;
 
-    std::vector<size_t> shape_scalar = {1};
-    std::vector<size_t> shape_vector = {3, 1};
+    std::vector<ssize_t> shape_scalar = {1};
+    std::vector<ssize_t> shape_vector = {3, 1};
     std::vector<double> field_vector_cache(3*vec_size);
     std::vector<double> field_scalar_cache(vec_size);
     std::vector<double> field_result_cache(3*vec_size);

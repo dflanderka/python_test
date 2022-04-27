@@ -21,6 +21,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
+#include <pybind11/detail/common.h>
 
 namespace py = pybind11;
 
@@ -30,7 +31,7 @@ class FieldCacheProxy
 {
 public:
     /// Constructor
-	FieldCacheProxy(std::string field_name, std::vector<size_t> shape, std::vector<double> field_cache_ptr)
+	FieldCacheProxy(std::string field_name, std::vector<ssize_t> shape, std::vector<double> field_cache_ptr)
     : field_name_(field_name), shape_(shape), field_cache_ptr_(field_cache_ptr)
     {
 	    shape_.resize(2); // shape_[1] < number of components
@@ -43,11 +44,11 @@ public:
 
     /// Getters
 	const std::string &field_name() const { return field_name_; }
-	const std::vector<size_t> &shape() const { return shape_; }
+	const std::vector<ssize_t> &shape() const { return shape_; }
 	std::vector<double> &field_cache_ptr() { return field_cache_ptr_; }
 private:
     std::string field_name_;
-    std::vector<size_t> shape_;
+    std::vector<ssize_t> shape_;
     std::vector<double> field_cache_ptr_;
 };
 
@@ -57,29 +58,33 @@ class PythonFieldBase
 public:
     PythonFieldBase(std::vector<FieldCacheProxy> data, FieldCacheProxy result)
     {
+    	static py::dtype d_type("float64");
+
     	// Fill dictionary of input fields
     	for (uint i=0; i<data.size(); ++i) {
-    	    std::vector<size_t> strides = { (data[i].shape()[1]*sizeof(double)) };
-    		py::array field_data(data[i].shape(), strides, data[i].field_cache_ptr() ); // numpy array
-    		fields_dict_[data[i].field_name()] = field_data;
+    		py::detail::any_container<ssize_t> shapes( data[i].shape() );
+    		py::detail::any_container<ssize_t> strides = { (data[i].shape()[1]*sizeof(double)) };
+    		py::array field_data(d_type, shapes, strides, &(data[i].field_cache_ptr()[0]) ); // numpy array
+    		fields_dict_[data[i].field_name().c_str()] = field_data;
         }
     	// Fill array of result field
     	{
-    		std::vector<size_t> strides = { (result.shape()[1]*sizeof(double)) };
-    		field_result_ = py::array(result.shape(), strides, result.field_cache_ptr() );
+    		py::detail::any_container<ssize_t> shapes( result.shape() );
+    		py::detail::any_container<ssize_t> strides = { (result.shape()[1]*sizeof(double)) };
+    		field_result_ = py::array(d_type, shapes, strides, &(result.field_cache_ptr()[0]) );
     	}
     }
 
-    py::list get_dependency() const
-    {
-        std::vector<std::string> field_names;
-        for (auto item : fields_dict_)
-        {
-        	field_names.push_back(item.first);
-        }
-        py::list field_list = py::cast(field_names);
-        return field_list;
-    }
+//    py::list get_dependency() const
+//    {
+//        std::vector<std::string> field_names;
+//        for (auto item : fields_dict_)
+//        {
+//        	field_names.push_back(item.first);
+//        }
+//        py::list field_list = py::cast(field_names);
+//        return field_list;
+//    }
 
     void set_time(double t)
     {

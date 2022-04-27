@@ -24,8 +24,9 @@ PYBIND11_MODULE(py_field_base, m) {
 //    //py::module m( "bih", );
     m.doc() = "PythonFieldBase.";
     py::class_<PythonFieldBase>(m, "FieldPython")
+		.def(py::init<std::vector<FieldCacheProxy>, FieldCacheProxy>())
 		.def_property("time", &PythonFieldBase::get_time, &PythonFieldBase::set_time)
-        .def("get_dependency", &PythonFieldBase::get_dependency)
+//        .def("get_dependency", &PythonFieldBase::get_dependency)
         .def("cache_reinit", &PythonFieldBase::cache_reinit , py::return_value_policy::copy);
 
 //    py::class_<BIHTree>(m, "BIH")
