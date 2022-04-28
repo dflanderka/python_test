@@ -25,6 +25,8 @@
 
 namespace py = pybind11;
 
+// Hides warning: "PythonFieldBase" declared with greater visibility than the type of its field ...
+// #pragma GCC visibility push(hidden)
 
 /// Helper class, holds data of one field
 class FieldCacheProxy
@@ -56,9 +58,9 @@ private:
 class PythonFieldBase
 {
 public:
-    PythonFieldBase(std::vector<FieldCacheProxy> data, FieldCacheProxy result)
+    PythonFieldBase(std::vector<FieldCacheProxy> &data, FieldCacheProxy &result)
     {
-    	static py::dtype d_type("float64");
+    	py::dtype d_type("float64");
 
     	// Fill dictionary of input fields
     	for (uint i=0; i<data.size(); ++i) {

@@ -9,7 +9,7 @@
 .pytest_cache/*
 .settings/*
 build/*
-*/Program Files/*
+*/Program_Files/*
 
 # Python packaging
 dist/*
