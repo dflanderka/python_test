@@ -29,14 +29,11 @@ PYBIND11_MODULE(py_field_base, m) {
 //        .def("get_dependency", &PythonFieldBase::get_dependency)
         .def("cache_reinit", &PythonFieldBase::cache_reinit , py::return_value_policy::copy);
 
-//    py::class_<BIHTree>(m, "BIH")
-//        .def(py::init<unsigned int>(), py::arg("soft_leaf_size_limit")  = 20)
-//        .def("add_boxes", &BIHTree::add_boxes)
-//        .def("construct", &BIHTree::construct)
-//        .def("find_box", &tree_find_box,
-//                 py::arg("box"),  py::arg("full_list") = false)
-//        .def("find_point", &tree_find_point,
-//                 py::arg("point"),  py::arg("full_list") = false);
+    py::class_<FieldCacheProxy>(m, "FieldCacheProxy")
+        .def(py::init<std::string, std::vector<ssize_t>, std::vector<double>>())
+        .def("field_name", &FieldCacheProxy::field_name)
+        .def("shape", &FieldCacheProxy::shape)
+        .def("field_cache_ptr", &FieldCacheProxy::field_cache_ptr);
     //return m.ptr();
 
 }
