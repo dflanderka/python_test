@@ -35,8 +35,8 @@ def get_sources(root, patterns):
 
 ext_modules = [
     setuptools.Extension(
-        'bih',
-        get_sources('src', ['bih.cc', 'python_bih.cc']),
+        'myexample',
+        get_sources('test', ['example.cpp']),
         include_dirs=[
             'src',
             # Path to pybind11 headers
@@ -108,7 +108,7 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name='bih',
+    name='myexample', 
     version=__version__,
     license='GPL 3.0',
     description='Bounded Interval Hierarchy.',
