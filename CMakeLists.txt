@@ -23,7 +23,7 @@ target_link_libraries(test_field_python
   /usr/lib/x86_64-linux-gnu/libpython3.8.so.1.0)
 
 # targets for test executables
-add_executable(example test/example.cc)
+add_executable(example test/example.cpp)
 target_link_libraries(example 
   python_test
   /usr/lib/x86_64-linux-gnu/libpython3.8.so.1.0)
