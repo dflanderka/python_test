@@ -10,6 +10,8 @@
 .settings/*
 build/*
 */Program_Files/*
+*/Program Files/*
+src/field_test.egg-info/*
 
 # Python packaging
 dist/*
