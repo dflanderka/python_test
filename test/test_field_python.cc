@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <pybind11/embed.h> // everything needed for embedding
 
 #include "python_field_base.hh"
 
@@ -52,6 +53,7 @@ void test_base_class() {
 //}
 
 int main() {
+	py::scoped_interpreter guard{}; // start the interpreter and keep it alive
 	std::cout << "Start python test \n";
 	test_base_class();
 //    test_bih_tree();
