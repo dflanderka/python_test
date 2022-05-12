@@ -45,10 +45,12 @@ protected:
           ));
     }
 
-    py::array create_array(ssize_t n_rows, ssize_t n_cols, ssize_t size)
+    py::array create_array(ssize_t n_rows, ssize_t n_cols, ssize_t size, bool fill = true)
     {
-        std::vector<double> result(size*n_rows*n_cols);
-        for (uint i=0; i<result.size(); ++i) result[i] = 1.0 + i;
+        std::vector<double> result(size*n_rows*n_cols, 0.0);
+        if (fill) {
+        	for (uint i=0; i<result.size(); ++i) result[i] = 1.0 + i;
+        }
 
         ssize_t              ndim    = 2;
         std::vector<ssize_t> shape   = { n_rows*n_cols , size };
@@ -79,6 +81,26 @@ public:
     	// set self.t in Python
     }
 
+    py::dict &get_fields_dict()
+    {
+    	return fields_dict_;
+    }
+
+    void set_fields_dict(py::dict &dict)
+    {
+    	this->fields_dict_ = dict;
+    }
+
+    py::array &get_field_result()
+    {
+    	return field_result_;
+    }
+
+    void set_field_result(py::array &res)
+    {
+    	this->field_result_ = res;
+    }
+
     void set_result_data(double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
     {
         field_result_ = this->create_array_with_data(data, n_rows, n_cols, size);
@@ -86,7 +108,7 @@ public:
 
     void set_result(ssize_t n_rows, ssize_t n_cols, ssize_t size)
     {
-        field_result_ = this->create_array(n_rows, n_cols, size);
+        field_result_ = this->create_array(n_rows, n_cols, size, false);
     }
 
     void add_to_dict_data(std::string field_name, double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
@@ -105,8 +127,13 @@ public:
         for (auto item : fields_dict_)
         {
         	std::cout << " - " << item.first << ":" << std::endl << item.second << std::endl;
-        	// check item.second
         }
+    }
+
+    void print_result() const
+    {
+        std::cout << "Result is: " << std::endl;
+       	std::cout << field_result_ << std::endl;
     }
 
 protected:

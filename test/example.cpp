@@ -23,7 +23,10 @@ PYBIND11_MODULE(myexample, m) {
         .def("set_result_data", &ExampleBase::set_result_data)
 		.def("add_to_dict_data", &ExampleBase::add_to_dict_data)
 		.def("print_fields", &ExampleBase::print_fields)
-        .def_property("t", &ExampleBase::get_time, &ExampleBase::set_time);
+		.def("print_result", &ExampleBase::print_result)
+        .def_property("t", &ExampleBase::get_time, &ExampleBase::set_time)
+	    .def_property("result", &ExampleBase::get_field_result, &ExampleBase::set_field_result)
+	    .def_property("f_dict", &ExampleBase::get_fields_dict, &ExampleBase::set_fields_dict);
 
 }
 
