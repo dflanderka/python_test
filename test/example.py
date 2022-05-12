@@ -1,10 +1,10 @@
 import sys
 
 import numpy as np
-import myexample
+import flowpy
 
 def test_example():
-    o = myexample.ExampleBase()
+    o = flowpy.FieldPythonBase()
     o.t = 0.1
     print(o.t)
     o.set_result(1, 3, 16)

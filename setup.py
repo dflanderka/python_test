@@ -35,7 +35,7 @@ def get_sources(root, patterns):
 
 ext_modules = [
     setuptools.Extension(
-        'myexample',
+        'flowpy',
         get_sources('test', ['example.cpp']),
         include_dirs=[
             'src',
@@ -108,7 +108,7 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name='myexample', 
+    name='flowpy', 
     version=__version__,
     license='GPL 3.0',
     description='Bounded Interval Hierarchy.',

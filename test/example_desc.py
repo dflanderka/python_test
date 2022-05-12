@@ -1,9 +1,9 @@
 import sys
 
 import numpy as np
-import myexample
+import flowpy
 
-class Field(myexample.ExampleBase):
+class Field(flowpy.FieldPythonBase):
     pass
   
     def __call__(self):

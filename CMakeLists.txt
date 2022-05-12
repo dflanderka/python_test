@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fvisibility=hidden")
 
 
 add_library(bih_tree SHARED src/bih.cc)
-add_library(python_test SHARED src/python_field_base.cc)
+#add_library(python_test SHARED src/python_field_base.cc)
 
 
 # targets for test executables
@@ -17,14 +17,12 @@ add_executable(test_bih_tree test/test_bih_tree.cc)
 target_link_libraries(test_bih_tree bih_tree)
 
 # targets for test executables
-add_executable(test_field_python test/test_field_python.cc)
-target_link_libraries(test_field_python 
-  python_test
-  /usr/lib/x86_64-linux-gnu/libpython3.8.so.1.0)
+#add_executable(test_field_python test/test_field_python.cc)
+#target_link_libraries(test_field_python 
+#  /usr/lib/x86_64-linux-gnu/libpython3.8.so.1.0)
 
 # targets for test executables
 add_executable(example test/example.cpp)
 target_link_libraries(example 
-  python_test
   /usr/lib/x86_64-linux-gnu/libpython3.8.so.1.0)
   

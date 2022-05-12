@@ -25,7 +25,7 @@
 
 namespace py = pybind11;
 
-class ExampleBase
+class FieldPythonBase
 {
 protected:
     py::array create_array_with_data(double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
@@ -67,7 +67,7 @@ protected:
           ));
     }
 public:
-	ExampleBase()
+    FieldPythonBase()
 	{}
 
 	void set_time(double t)
