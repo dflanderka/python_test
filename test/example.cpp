@@ -4,7 +4,8 @@
 
 
 #include <pybind11/pybind11.h>
-#include <pybind11/embed.h> // everything needed for embedding
+#include <pybind11/embed.h>    // everything needed for embedding
+#include <pybind11/stl.h>      // type conversion
 #include "example.hh"
 
 int add(int i, int j) {
@@ -37,11 +38,13 @@ void fill_vec(std::vector<double> &vec) {
 int main() {
 	py::scoped_interpreter guard{}; // start the interpreter and keep it alive
 
+	// test of simple function in C++
 	int a = 1;
 	int b = 2;
 	int c = add(a, b);
 	std::cout << "Add function: " << a << " + " << b << " = " << c << std::endl;
 
+	// test of FieldPythonBase object in C++
 	std::vector<double> csection_vec(16);
 	fill_vec(csection_vec);
 	std::vector<double> velocity_vec(48);
@@ -53,6 +56,22 @@ int main() {
 	field.add_to_dict_data( "velocity", &(velocity_vec[0]), 1, 3, 16 );
 	field.set_result_data( &(result_vec[0]), 1, 3, 16 );
 	field.print_fields();
+
+	// test of call of simple function in Python
+	// source: https://stackoverflow.com/questions/42521830/call-a-python-function-from-c-using-pybind11
+	auto math = py::module::import("math");
+	double root_two = math.attr("sqrt")(2.0).cast<double>();
+	std::cout << "The square root of 2 is: " << root_two << "\n";
+
+	// test of call of 'add' function in Python
+	// source: same as previous
+	auto flowpy = py::module::import("flowpy");
+    py::function add_func =
+        py::reinterpret_borrow<py::function>(   // cast from 'object' to 'function - use `borrow` (copy) or `steal` (move)
+            py::module::import("flowpy").attr("add")  // import method "min_rosen" from python "module"
+        );
+	int add_result = add_func(2, 3).cast<int>();
+	std::cout << "Result of add(2, 3) is: " << add_result << "\n";
 
 	return 0;
 }
