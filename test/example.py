@@ -3,6 +3,12 @@ import sys
 import numpy as np
 import flowpy
 
+def test_add():
+    x = 2
+    y = 3
+    res = flowpy.add(x,y)
+    print(res)
+    
 def test_example():
     o = flowpy.FieldPythonBase()
     o.t = 0.1
@@ -12,4 +18,5 @@ def test_example():
     o.add_to_dict("velocity", 1, 3, 16)
     o.print_fields()
 
+test_add()
 test_example()
