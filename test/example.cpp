@@ -47,14 +47,18 @@ int main() {
 	// test of FieldPythonBase object in C++
 	std::vector<double> csection_vec(16);
 	fill_vec(csection_vec);
+	std::vector<ssize_t> csection_shape = {1,1};
 	std::vector<double> velocity_vec(48);
 	fill_vec(velocity_vec);
+	std::vector<ssize_t> velocity_shape = {1,3};
 	std::vector<double> result_vec(48);
 	fill_vec(result_vec);
-	FieldPythonBase field;
-	field.add_to_dict_data( "csection", &(csection_vec[0]), 1, 1, 16 );
-	field.add_to_dict_data( "velocity", &(velocity_vec[0]), 1, 3, 16 );
-	field.set_result_data( &(result_vec[0]), 1, 3, 16 );
+	std::vector<ssize_t> result_shape = {1,3};
+	std::vector<FieldCacheProxy> field_data;
+	field_data.emplace_back("csection", csection_shape, csection_vec);
+	field_data.emplace_back("velocity", velocity_shape, velocity_vec);
+	FieldCacheProxy result_data("result", result_shape, result_vec);
+	FieldPythonBase field(field_data, result_data);
 	field.print_fields();
 
 	// test of call of simple function in Python

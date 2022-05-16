@@ -25,6 +25,29 @@
 
 namespace py = pybind11;
 
+/// Helper class, holds data of one field
+class FieldCacheProxy
+{
+public:
+    /// Constructor
+	FieldCacheProxy(std::string field_name, std::vector<ssize_t> shape, std::vector<double> field_cache_ptr)
+    : field_name_(field_name), shape_(shape), field_cache_ptr_(field_cache_ptr)
+    {
+	    //ASSERT(shape.size() == 2);
+    }
+
+    /// Getters
+	const std::string &field_name() const { return field_name_; }
+	ssize_t n_rows() const { return shape_[0]; }
+	ssize_t n_cols() const { return shape_[1]; }
+	std::vector<double> &field_cache_ptr() { return field_cache_ptr_; }
+private:
+    std::string field_name_;
+    std::vector<ssize_t> shape_;
+    std::vector<double> field_cache_ptr_;
+};
+
+
 class FieldPythonBase
 {
 protected:
@@ -69,6 +92,23 @@ protected:
 public:
     FieldPythonBase()
 	{}
+
+    FieldPythonBase(std::vector<FieldCacheProxy> &data, FieldCacheProxy &result)
+    {
+        py::dtype d_type("float64");
+
+        // Fill dictionary of input fields
+        for (uint i=0; i<data.size(); ++i) {
+            ssize_t size = data[i].field_cache_ptr().size() / (data[i].n_rows() * data[i].n_cols());
+            fields_dict_[data[i].field_name().c_str()] =
+                    create_array_with_data(&(data[i].field_cache_ptr()[0]), data[i].n_rows(), data[i].n_cols(), size);
+        }
+        // Fill array of result field
+        {
+            ssize_t size = result.field_cache_ptr().size() / (result.n_rows() * result.n_cols());
+            field_result_ = create_array_with_data(&(result.field_cache_ptr()[0]), result.n_rows(), result.n_cols(), size);
+        }
+    }
 
 	void set_time(double t)
     {
