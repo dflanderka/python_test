@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import flowpy
 
-class Field(flowpy.FieldPythonBase):
+class Field(flowpy.PythonFieldBase):
     pass
   
     def __call__(self):

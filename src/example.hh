@@ -48,7 +48,7 @@ private:
 };
 
 
-class FieldPythonBase
+class PythonFieldBase
 {
 protected:
     py::array create_array_with_data(double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
@@ -90,10 +90,10 @@ protected:
           ));
     }
 public:
-    FieldPythonBase()
+    PythonFieldBase()
 	{}
 
-    FieldPythonBase(std::vector<FieldCacheProxy> &data, FieldCacheProxy &result)
+    PythonFieldBase(std::vector<FieldCacheProxy> &data, FieldCacheProxy &result)
     {
         py::dtype d_type("float64");
 

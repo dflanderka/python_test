@@ -16,18 +16,18 @@ PYBIND11_MODULE(flowpy, m) {
     m.doc() = "pybind11 example plugin"; // optional module docstring
     m.def("add", &add, "A function that adds two numbers");
 
-    py::class_<FieldPythonBase>(m, "FieldPythonBase")
+    py::class_<PythonFieldBase>(m, "PythonFieldBase")
         .def(py::init<>())
         //.def(py::init<std::string, std::vector<ssize_t>, std::vector<double>>())
-        .def("set_result", &FieldPythonBase::set_result)
-		.def("add_to_dict", &FieldPythonBase::add_to_dict)
-        .def("set_result_data", &FieldPythonBase::set_result_data)
-		.def("add_to_dict_data", &FieldPythonBase::add_to_dict_data)
-		.def("print_fields", &FieldPythonBase::print_fields)
-		.def("print_result", &FieldPythonBase::print_result)
-        .def_property("t", &FieldPythonBase::get_time, &FieldPythonBase::set_time)
-	    .def_property("result", &FieldPythonBase::get_field_result, &FieldPythonBase::set_field_result)
-	    .def_property("f_dict", &FieldPythonBase::get_fields_dict, &FieldPythonBase::set_fields_dict);
+        .def("set_result", &PythonFieldBase::set_result)
+		.def("add_to_dict", &PythonFieldBase::add_to_dict)
+        .def("set_result_data", &PythonFieldBase::set_result_data)
+		.def("add_to_dict_data", &PythonFieldBase::add_to_dict_data)
+		.def("print_fields", &PythonFieldBase::print_fields)
+		.def("print_result", &PythonFieldBase::print_result)
+        .def_property("t", &PythonFieldBase::get_time, &PythonFieldBase::set_time)
+	    .def_property("result", &PythonFieldBase::get_field_result, &PythonFieldBase::set_field_result)
+	    .def_property("f_dict", &PythonFieldBase::get_fields_dict, &PythonFieldBase::set_fields_dict);
 
 }
 
@@ -44,7 +44,7 @@ int main() {
 	int c = add(a, b);
 	std::cout << "Add function: " << a << " + " << b << " = " << c << std::endl;
 
-	// test of FieldPythonBase object in C++
+	// test of PythonFieldBase object in C++
 	std::vector<double> csection_vec(16);
 	fill_vec(csection_vec);
 	std::vector<ssize_t> csection_shape = {1,1};
@@ -58,7 +58,7 @@ int main() {
 	field_data.emplace_back("csection", csection_shape, csection_vec);
 	field_data.emplace_back("velocity", velocity_shape, velocity_vec);
 	FieldCacheProxy result_data("result", result_shape, result_vec);
-	FieldPythonBase field(field_data, result_data);
+	PythonFieldBase field(field_data, result_data);
 	field.print_fields();
 
 	// test of call of simple function in Python

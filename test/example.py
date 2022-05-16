@@ -10,7 +10,7 @@ def test_add():
     print(res)
     
 def test_example():
-    o = flowpy.FieldPythonBase()
+    o = flowpy.PythonFieldBase()
     o.t = 0.1
     print(o.t)
     o.set_result(1, 3, 16)
