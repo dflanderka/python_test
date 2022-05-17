@@ -106,7 +106,9 @@ public:
         // Fill array of result field
         {
             ssize_t size = result.field_cache_ptr().size() / (result.n_rows() * result.n_cols());
-            field_result_ = create_array_with_data(&(result.field_cache_ptr()[0]), result.n_rows(), result.n_cols(), size);
+            fields_dict_[result.field_name().c_str()] =
+                    create_array_with_data(&(result.field_cache_ptr()[0]), result.n_rows(), result.n_cols(), size);
+            field_result_ = result.field_name();
         }
     }
 
@@ -131,24 +133,26 @@ public:
     	this->fields_dict_ = dict;
     }
 
-    py::array &get_field_result()
+    const py::array &get_field_result()
     {
-    	return field_result_;
+    	return this->fields_dict_[field_result_.c_str()];
     }
 
     void set_field_result(py::array &res)
     {
-    	this->field_result_ = res;
+    	this->fields_dict_[field_result_.c_str()] = res;
     }
 
-    void set_result_data(double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
+    void set_result_data(std::string field_name, double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
     {
-        field_result_ = this->create_array_with_data(data, n_rows, n_cols, size);
+        fields_dict_[field_name.c_str()] = this->create_array_with_data(data, n_rows, n_cols, size);
+        field_result_ = field_name;
     }
 
-    void set_result(ssize_t n_rows, ssize_t n_cols, ssize_t size)
+    void set_result(std::string field_name, ssize_t n_rows, ssize_t n_cols, ssize_t size)
     {
-        field_result_ = this->create_array(n_rows, n_cols, size, false);
+        fields_dict_[field_name.c_str()] = this->create_array(n_rows, n_cols, size, false);
+        field_result_ = field_name;
     }
 
     void add_to_dict_data(std::string field_name, double *data, ssize_t n_rows, ssize_t n_cols, ssize_t size)
@@ -172,13 +176,17 @@ public:
 
     void print_result() const
     {
-        std::cout << "Result is: " << std::endl;
-       	std::cout << field_result_ << std::endl;
+        std::cout << "Result is: " << field_result_ << std::endl;
+        for (auto item : fields_dict_)
+        {
+        	std::string field_name = item.first.attr("__str__")().cast<std::string>();
+        	if (field_name == field_result_) std::cout << item.second << std::endl;
+        }
     }
 
 protected:
     py::dict fields_dict_;
-    py::array field_result_;
+    std::string field_result_;
     double time_;
 };
 
