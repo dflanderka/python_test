@@ -76,6 +76,29 @@ int main() {
         );
 	int add_result = add_func(2, 3).cast<int>();
 	std::cout << "Result of add(2, 3) is: " << add_result << "\n";
+	std::cout << "-----------------------------------------------------\n";
+
+	// test of using function - use object 'PythonFieldBase field;'
+	std::cout << "The most important test simulated behavior of Flow123D new assembly.\n";
+	py::function fn_init =
+	    py::reinterpret_borrow<py::function>(   // cast from 'object' to 'function - use `borrow` (copy) or `steal` (move)
+	        py::module::import("example_func").attr("fn_init")  // import method "min_rosen" from python "module"
+	    );
+	py::function fn_reinit =
+	    py::reinterpret_borrow<py::function>(   // cast from 'object' to 'function - use `borrow` (copy) or `steal` (move)
+	        py::module::import("example_func").attr("fn_reinit")  // import method "min_rosen" from python "module"
+	    );
+	py::function fn_eval =
+	    py::reinterpret_borrow<py::function>(   // cast from 'object' to 'function - use `borrow` (copy) or `steal` (move)
+	        py::module::import("example_func").attr("fn_eval")  // import method "min_rosen" from python "module"
+	    );
+	py::object user_context = fn_init(field);
+	py::object f = fn_reinit(field, user_context);
+	fn_eval(field, user_context);
+	std::cout << "After 'fn_eval' function:" << std::endl;
+	field.print_result();
+
+	//https://pybind11.readthedocs.io/en/stable/advanced/pycpp/object.html#calling-python-methods
 
 	return 0;
 }
